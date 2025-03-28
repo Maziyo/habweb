@@ -14,10 +14,10 @@
     {
       "src": "/api/index",
       "dest": "/api/index.js"
-    },   {
-      "src": "/(.*).js",
+    },  {
+      "src": "/assets/(.*)",
       "headers": { "Content-Type": "application/javascript" },
-      "dest": "/dist/index.html"
+      "dest": "/dist/assets/$1"
     },
     
     {
