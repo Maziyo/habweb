@@ -11,7 +11,7 @@ function App() {
     console.log(inputValue); // 여기에 inputValue 출력 확인
 
     try {
-      const response = await fetch('http://localhost:3000/api/index', {
+      const response = await fetch('https://habweb.vercel.app/api/index', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
