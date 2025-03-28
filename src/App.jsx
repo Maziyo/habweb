@@ -11,7 +11,7 @@ function App() {
     console.log(inputValue); // 여기에 inputValue 출력 확인
 
     try {
-      const response = await fetch('https://habweb.vercel.app/api/index', {
+      const response = await fetch('http://localhost:3000/api/index', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,8 +23,23 @@ function App() {
 
       if (response.ok) {
         setMessage('Data saved successfully!');  // 성공 메시지
+        const getResponse = await fetch('http://localhost:3000/api/index', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (getResponse.ok) {
+          const data = await getResponse.json();  // 받은 데이터를 JSON으로 파싱
+          //setData(data);  // 새로운 데이터로 상태 업데이트
+          console.log("update!")
+        } else {
+          // getResponse.ok가 false인 경우
+          console.error('Failed to fetch data:', getResponse.status, getResponse.statusText);
+          setError('Failed to fetch updated data.');
+        }
         setError(null);  // 에러 메시지 초기화
-        console.log(result);  // 서버에서 받은 응답 출력
       } else {
         setError(result.error || 'Failed to save data');  // 서버 오류 처리
         setMessage('');  // 성공 메시지 초기화

@@ -41,29 +41,40 @@ export default async (req, res) => {
                 ])
                 .select('id, text')
 
-             // 로그 출력
-             console.log('Inserted data:', data);  // 삽입된 데이터 확인
-             console.log('Error:', error);  // 오류 로그 확인
- 
-             // 오류가 발생했을 때 추가 정보 출력
-             if (error) {
-                 console.error('Supabase error during insert:', error);
-                 return res.status(500).json({ error: error.message, details: error.details, code: error.code });
-             }
- 
-             // data가 반환되지 않은 경우 문제 해결
-             if (!data || data.length === 0) {
-                 console.error('Failed to insert data: No data returned');
-                 return res.status(500).json({ error: 'Failed to insert data' });
-             }
+            // 로그 출력
+            console.log('Inserted data:', data);  // 삽입된 데이터 확인
+            console.log('Error:', error);  // 오류 로그 확인
 
-            return res.status(200).json(data[0]);  // 첫 번째 삽입된 데이터 반환
+            // 오류가 발생했을 때 추가 정보 출력
+            if (error) {
+                console.error('Supabase error during insert:', error);
+                return res.status(500).json({ error: error.message, details: error.details, code: error.code });
+            }
+
+            // data가 반환되지 않은 경우 문제 해결
+            if (!data || data.length === 0) {
+                console.error('Failed to insert data: No data returned');
+                return res.status(500).json({ error: 'Failed to insert data' });
+            }
+
+            // 데이터 삽입 후, 최신 데이터를 가져오는 GET 요청 호출
+            const { data: latestData, error: latestError } = await supabase.from('tests').select('*');
+            if (latestError) {
+                console.error('Error fetching latest data:', latestError);
+                return res.status(500).send('Internal Server Error');
+            }
+
+
+
+            return res.status(200).json(latestData);  // 첫 번째 삽입된 데이터 반환
         } catch (error) {
             console.error('Error adding text:', error);
             return res.status(500).send('Internal Server Error');
         }
     }
 
+
     // Method Not Allowed
     return res.status(405).send('Method Not Allowed');
 };
+
